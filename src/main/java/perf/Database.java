@@ -17,7 +17,6 @@ public class Database {
         String databasePath = databaseFile.getPath();
         try {
             connection = DriverManager.getConnection("jdbc:sqlite:" + databasePath);
-            connection.prepareStatement("DELETE FROM contacts WHERE id >= 1").execute();
         } catch (SQLException e) {
             throw new RuntimeException("Could not create connection: " + e.toString());
         }
@@ -35,6 +34,9 @@ public class Database {
                     )
                     """
             );
+
+            statement.execute("CREATE UNIQUE INDEX index_contacts_email ON contacts(email);");
+
         } catch (SQLException e) {
             throw new RuntimeException("Could not migrate db: " + e.toString());
         }
